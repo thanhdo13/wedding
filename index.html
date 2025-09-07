@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Wedding - Nam ❤️ Lan</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fffaf5;
+      color: #333;
+      text-align: center;
+    }
+    section {
+      position: relative;
+      padding: 80px 20px;
+      max-width: 1100px;
+      margin: auto;
+      z-index: 1;
+    }
+    section h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #b48a60;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 0;
+    }
+    /* Hero slideshow */
+    .hero {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .hero-slide.active { opacity: 1; }
+    .hero-content {
+      z-index: 2;
+      background: rgba(0,0,0,0.4);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(6px);
+      animation: fadeIn 2s ease;
+    }
+    .hero h1 {
+      font-size: 3.5em;
+      margin: 0;
+      font-family: 'Brush Script MT', cursive;
+    }
+    .hero p {
+      font-size: 1.5em;
+      margin-top: 15px;
+    }
+    .countdown {
+      font-size: 1.8em;
+      margin-top: 15px;
+      background: rgba(255,255,255,0.2);
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 15px;
+      animation: pulse 2s infinite;
+    }
+    /* Timeline vertical */
+    .timeline-container {
+      position: relative;
+      margin: 40px auto;
+      padding-left: 40px;
+    }
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 20px;
+      width: 4px;
+      height: 100%;
+      background: #b48a60;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 40px;
+      text-align: left;
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: all 1s ease;
+    }
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2px;
+      top: 10px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border: 4px solid #b48a60;
+      border-radius: 50%;
+    }
+    .timeline-item .content {
+      background: rgba(255,255,255,0.9);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: inline-block;
+    }
+    /* Gallery */
+    .gallery {
+      column-count: 3;
+      column-gap: 10px;
+    }
+    .gallery img {
+      width: 100%;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gallery img:hover { transform: scale(1.03); }
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.8);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:1000;
+    }
+    .lightbox img {
+      max-width:90%;
+      max-height:90%;
+      border-radius: 15px;
+    }
+    /* Forms */
+    form {
+      max-width:500px;
+      margin:auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      z-index: 1;
+    }
+    input, textarea, select, button {
+      padding:12px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      font-size:1em;
+    }
+    button {
+      background:#b48a60;
+      color:white;
+      border:none;
+      cursor:pointer;
+      transition:0.3s;
+    }
+    button:hover { opacity:0.9; transform: scale(1.05); }
+    footer {
+      background:#b48a60;
+      color:white;
+      padding:20px;
+      margin-top:40px;
+    }
+    /* RSVP cards */
+    .rsvp-card {
+      margin: 10px auto;
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 400px;
+      text-align: left;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      font-size: 1.1em;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 1s ease;
+    }
+    .rsvp-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .rsvp-yes { background: #e6fff2; border-left: 6px solid #2ecc71; }
+    .rsvp-no { background: #ffe6e6; border-left: 6px solid #e74c3c; }
+    .rsvp-maybe { background: #fff9e6; border-left: 6px solid #f1c40f; }
+    /* Background images */
+    .bg-love { background:url('https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg') center/cover fixed; }
+    .bg-info { background:url('https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg') center/cover fixed; }
+    .bg-guest { background:url('https://images.pexels.com/photos/265920/pexels-photo-265920.jpeg') center/cover fixed; }
+    .with-overlay { position:relative; color:white; }
+    .with-overlay h2, .with-overlay p, .with-overlay form { position:relative; z-index:1; }
+    @media(max-width:768px){
+      .gallery { column-count:2; }
+    }
+    @media(max-width:500px){
+      .gallery { column-count:1; }
+    }
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity:0;}
+      to {opacity:1;}
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Slideshow -->
+  <div class="hero">
+    <div class="hero-slide active" style="background-image:url('https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg');"></div>
+    <div class="hero-slide" style="background-image:url('https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg');"></div>
+    <div class="hero-slide" style="background-image:url('https://images.pexels.com/photos/341372/pexels-photo-341372.jpeg');"></div>
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1>Nam ❤️ Lan</h1>
+      <p>💍 Cùng đếm ngược đến ngày trọng đại</p>
+      <div id="countdown" class="countdown"></div>
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <section class="bg-love with-overlay">
+    <div class="overlay"></div>
+    <h2>Câu chuyện tình yêu</h2>
+    <div class="timeline-container">
+      <div class="timeline-item"><div class="content">💌 2018 – Gặp nhau lần đầu tại trường đại học</div></div>
+      <div class="timeline-item"><div class="content">🌸 2020 – Chính thức hẹn hò</div></div>
+      <div class="timeline-item"><div class="content">✈️ 2022 – Chuyến du lịch đầu tiên cùng nhau</div></div>
+      <div class="timeline-item"><div class="content">💍 2025 – Cầu hôn và chuẩn bị đám cưới</div></div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section>
+    <h2>Album Kỷ Niệm</h2>
+    <div class="gallery">
+      <img src="https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg">
+      <img src="https://images.pexels.com/photos/2959192/pexels-photo-2959192.jpeg">
+      <img src="https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg">
+      <img src="https://images.pexels.com/photos/265920/pexels-photo-265920.jpeg">
+      <img src="https://images.pexels.com/photos/341372/pexels-photo-341372.jpeg">
+      <img src="https://images.pexels.com/photos/265920/pexels-photo-265920.jpeg">
+    </div>
+  </section>
+
+  <!-- Info -->
+  <section class="bg-info with-overlay">
+    <div class="overlay"></div>
+    <h2>Thông tin lễ cưới</h2>
+    <p>📅 Ngày 20 tháng 12, 2025</p>
+    <p>📍 Nhà hàng Diamond Palace, TP.HCM</p>
+    <iframe src="https://www.google.com/maps/embed?..." width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+  </section>
+
+  <!-- RSVP -->
+  <section>
+    <h2>RSVP</h2>
+    <form onsubmit="event.preventDefault(); addRSVP();">
+      <input type="text" id="rsvpName" placeholder="Tên của bạn" required>
+      <select id="rsvpStatus">
+        <option value="yes">Sẽ tham dự</option>
+        <option value="no">Không tham dự</option>
+        <option value="maybe">Đang cân nhắc</option>
+      </select>
+      <button type="submit">Xác nhận</button>
+    </form>
+    <div id="rsvpList"></div>
+  </section>
+
+  <!-- Guestbook -->
+  <section class="bg-guest with-overlay">
+    <div class="overlay"></div>
+    <h2>Gửi lời chúc</h2>
+    <form onsubmit="event.preventDefault(); addWish();">
+      <input type="text" id="name" placeholder="Tên của bạn" required>
+      <textarea id="message" placeholder="Lời chúc..." required></textarea>
+      <button type="submit">Gửi</button>
+    </form>
+    <div id="wishes"></div>
+    <h3>Lời chúc nổi bật ✨</h3>
+    <p id="featuredWish"></p>
+  </section>
+
+  <footer>
+    Hẹn gặp lại mọi người trong ngày vui của chúng mình 💖
+  </footer>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox"><img src=""></div>
+
+  <script>
+    // Countdown
+    const weddingDate = new Date("Dec 20, 2025 10:00:00").getTime();
+    setInterval(function() {
+      const now = new Date().getTime();
+      const distance = weddingDate - now;
+      const cd = document.getElementById("countdown");
+      if (distance < 0) { cd.innerHTML = "🎉 Đám cưới đã diễn ra!"; return; }
+      const d = Math.floor(distance / (1000*60*60*24));
+      const h = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+      const m = Math.floor((distance%(1000*60*60))/(1000*60));
+      const s = Math.floor((distance%(1000*60))/1000);
+      cd.innerHTML = `${d} ngày ${h} giờ ${m} phút ${s} giây`;
+    },1000);
+
+    // Lightbox
+    const galleryImgs = document.querySelectorAll('.gallery img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+    galleryImgs.forEach(img=>{
+      img.addEventListener('click',()=>{
+        lightbox.style.display='flex';
+        lightboxImg.src = img.src;
+      });
+    });
+    lightbox.addEventListener('click',()=>lightbox.style.display='none');
+
+    // RSVP local
+    function addRSVP(){
+      const name=document.getElementById('rsvpName').value;
+      const status=document.getElementById('rsvpStatus').value;
+      const list=document.getElementById('rsvpList');
+      const item=document.createElement('div');
+      let cssClass="", icon="";
+      if(status==="yes"){ cssClass="rsvp-card rsvp-yes"; icon="🎉"; }
+      else if(status==="no"){ cssClass="rsvp-card rsvp-no"; icon="😢"; }
+      else { cssClass="rsvp-card rsvp-maybe"; icon="🤔"; }
+      item.className=cssClass;
+      item.textContent=`${icon} ${name}` + (status==="yes"?": Sẽ tham dự": status==="no"?": Không tham dự":": Đang cân nhắc");
+      list.appendChild(item);
+      setTimeout(()=> item.classList.add('visible'), 100);
+      document.getElementById('rsvpName').value="";
+    }
+
+    // Wishes local
+    function addWish(){
+      const name=document.getElementById('name').value;
+      const msg=document.getElementById('message').value;
+      const wishes=document.getElementById('wishes');
+      const wish=document.createElement('p');
+      wish.textContent=`💌 ${name}: ${msg}`;
+      wishes.appendChild(wish);
+      document.getElementById('name').value="";
+      document.getElementById('message').value="";
+      document.getElementById('featuredWish').textContent=msg;
+    }
+
+    // Hero slideshow auto
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    setInterval(()=>{
+      slides[slideIndex].classList.remove('active');
+      slideIndex = (slideIndex+1)%slides.length;
+      slides[slideIndex].classList.add('active');
+    },5000);
+
+    // Scroll animations
+    function handleScroll(){
+      document.querySelectorAll('.timeline-item').forEach(el=>{
+        const rect=el.getBoundingClientRect();
+        if(rect.top<window.innerHeight-50){ el.classList.add('visible'); }
+      });
+      document.querySelectorAll('.rsvp-card').forEach(el=>{
+        const rect=el.getBoundingClientRect();
+        if(rect.top<window.innerHeight-50){ el.classList.add('visible'); }
+      });
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+          } else {
+            entry.target.classList.remove('show'); // 👈 reset khi out of view
+          }
+        });
+      }, { threshold: 0.2 });
+
+      timelineItems.forEach(item => {
+        observer.observe(item);
+      });
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('load', handleScroll);
+  </script>
+</body>
+</html>
