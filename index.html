@@ -119,11 +119,29 @@
       border-radius: 50%;
     }
     .timeline-item .content {
-      background: rgba(255,255,255,0.9);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      padding: 18px 22px;
+      border-radius: 14px;
+      border: 2px solid #d4af37;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      color: #333;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: inline-block;
+    }
+    .timeline-item:nth-child(1) .content {
+      background: linear-gradient(135deg, #fffde7, #e0f7fa);
+    }
+    .timeline-item:nth-child(2) .content {
+      background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+    }
+    .timeline-item:nth-child(3) .content {
+      background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+    }
+    .timeline-item:nth-child(4) .content {
+      background: linear-gradient(135deg, #ede7f6, #e1f5fe);
+    }
+    .timeline-item .content:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
     }
     /* Gallery */
     .gallery {
@@ -194,6 +212,10 @@
       opacity: 0;
       transform: translateY(30px);
       transition: all 1s ease;
+    }
+    .rsvp-card:hover {
+      box-shadow: 0 6px 15px rgba(212,175,55,0.6);
+      transform: scale(1.05);
     }
     .rsvp-card.visible {
       opacity: 1;
